@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hotel Group Audit · V9</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">HA</div>
+    <div><div class="eyebrow">LOCAL HOTEL WORKSPACE</div><h1>Group Booking Audit</h1></div>
+    <span class="version">V9 · EXCEL BREAKDOWN</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">RECONCILIATION WORKSPACE</p>
+        <h2>From group reports to a clear audit.</h2>
+        <p class="muted">Import daily Group Reports and a Folio, enter nightly contract rates, and compare expected full-stay totals against Folio room charges.</p>
+      </div>
+      <div class="local-note"><span class="dot"></span> Files are processed in this browser</div>
+    </section>
+
+    <section class="steps" aria-label="Workflow">
+      <div class="step active"><span>01</span><div><b>Import files</b><small>Group Reports + Folio</small></div></div>
+      <div class="step"><span>02</span><div><b>Select group</b><small>Choose what to audit</small></div></div>
+      <div class="step"><span>03</span><div><b>Contract rates</b><small>Expected amounts</small></div></div>
+      <div class="step"><span>04</span><div><b>Review</b><small>Inspect extracted data</small></div></div>
+      <div class="step"><span>05</span><div><b>Export</b><small>Generate Excel</small></div></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><span class="number">1</span><h3>Import your reports</h3></div><span class="hint">PDF files</span></div>
+      <div class="upload-grid">
+        <label class="dropzone" for="groupFiles">
+          <span class="upload-icon">↑</span><strong>Daily Group Reports</strong>
+          <span class="muted small">Select multiple PDFs — one per date</span>
+          <span class="file-button">Choose Group Reports</span>
+          <input id="groupFiles" type="file" accept="application/pdf,.pdf" multiple>
+          <span id="groupFileNames" class="file-list">No files selected</span>
+        </label>
+        <label class="dropzone folio-zone" for="folioFile">
+          <span class="upload-icon">↑</span><strong>Group Folio</strong>
+          <span class="muted small">Select the folio for the group being audited</span>
+          <span class="file-button">Choose Folio PDF</span>
+          <input id="folioFile" type="file" accept="application/pdf,.pdf">
+          <span id="folioFileName" class="file-list">No file selected</span>
+        </label>
+      </div>
+      <div class="actions"><button id="parseBtn" class="primary">Extract report data <span>→</span></button><span id="parseStatus" class="status">Ready for files</span></div>
+      <p class="footnote">PDFs are read locally by your browser. Nothing is uploaded to a server. This version adds a structured room-record preview. Review the parsed fields before relying on them for financial reconciliation.</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><span class="number">2</span><h3>Choose an audit view</h3></div><span class="hint">Available after import</span></div>
+      <div class="audit-controls">
+        <label>Audit scope<select id="auditScope"><option value="full">Full group stay</option><option value="date">Specific group and date</option></select></label>
+        <label>Group<select id="groupSelect" disabled><option value="">Import reports first</option></select></label>
+        <label id="dateWrap" class="hidden">Report date<select id="dateSelect"><option value="">Choose a date</option></select></label>
+      </div>
+      <div id="selectionSummary" class="empty-state"><span class="empty-symbol">⌁</span><b>No group selected yet</b><span>Import one or more Group Report PDFs to discover the groups inside them.</span></div>
+<div class="group-settings">
+    <h4>Group settings</h4>
+
+    <label>
+        Group type
+        <select id="groupTypeSelect" disabled>
+            <option value="tourist">Tourist Group</option>
+            <option value="israeli">Israeli Group</option>
+        </select>
+    </label>
+
+    <label>
+        Breakdown language
+        <select id="breakdownLanguage" disabled>
+            <option value="en">English</option>
+            <option value="he">Hebrew</option>
+        </select>
+    </label>
+
+    <p id="vatRuleNote" class="footnote">
+        Select a group to configure its type and breakdown language. Settings and contract rates are saved locally on this computer.
+    </p>
+</div>    
+</section>
+
+    <section class="panel">
+      <div class="section-heading"><div><span class="number">3</span><h3>Contract rates</h3></div><span class="hint">Manual entry</span></div>
+      <p class="muted">Enter a separate contract rate for each night, UPG room type, and occupancy. Thursday and Friday nights can have different prices from other nights. Currency is fixed by the selected breakdown language: English = USD; Hebrew = ILS. Rates are saved locally for each group.</p>
+      <div class="rate-toolbar"><button id="addRateBtn" class="secondary">＋ Add night rate</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Night date</th><th>Room type (UPG)</th><th>Occupancy</th><th>Contract rate</th><th>Currency (automatic)</th><th></th></tr></thead><tbody id="rateRows"></tbody></table></div>
+      <p class="footnote">Enter the date of the night the rate applies to. For example, a stay from Thursday to Sunday has Thursday, Friday, and Saturday night rows. Thursday and Friday may use different rates. English contract rates and Folio comparisons are always USD. Hebrew contract rates and Folio comparisons are always ILS. No exchange rate or currency conversion is applied. If an older saved rate is marked in the other currency, re-enter its amount in the required currency or delete and recreate that row. The Group Report room type is taken from UPG, not RM. Master-account VAT (18%) is excluded from room-charge reconciliation.</p>
+    </section>
+
+    <section class="panel export-panel">
+      <div class="section-heading"><div><span class="number">5</span><h3>Generate Excel breakdown</h3></div><span class="hint">Uses the original hotel templates</span></div>
+      <p class="muted">Create a breakdown for the selected group. Room charges are grouped by stay night, room type and occupancy. Existing Free/Staff and incidental sections are retained without adding unconfirmed calculations.</p>
+      <div class="actions"><button id="exportBtn" class="primary" disabled>Generate Excel breakdown <span>↓</span></button><span id="exportStatus" class="status">Select a group and enter its nightly contract rates.</span></div>
+      <p class="footnote">English room charges are in USD; the English incidental section remains in ILS. Hebrew breakdowns are in ILS and retain the template's existing 18% VAT formulas. No exchange-rate conversion is performed. A Tourist group using the Hebrew template is blocked because that template automatically calculates VAT, while Tourist VAT must remain manual.</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><span class="number">6</span><h3>Extracted data preview</h3></div><span id="previewCount" class="hint">No data yet</span></div>
+      <div id="previewTabs" class="tabs"><button class="tab selected" data-tab="groups">Group Reports</button><button class="tab" data-tab="records">Parsed room records</button><button class="tab" data-tab="folioRows">Folio charges</button><button class="tab" data-tab="reconciliation">Reconciliation</button><button class="tab" data-tab="folio">Raw Folio text</button></div>
+      <div id="preview" class="preview-empty">Your extracted text and detected group names will appear here.</div>
+    </section>
+    <footer>Hotel Group Booking Audit · Local group audit workspace <span>Designed for local use</span></footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
