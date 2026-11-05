@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:room-nights": "node --test tests/roomNightEngine.test.mjs"
+  }
+}
