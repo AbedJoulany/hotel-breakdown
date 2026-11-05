@@ -10,7 +10,7 @@
   <header class="topbar">
     <div class="brand-mark">HA</div>
     <div><div class="eyebrow">LOCAL HOTEL WORKSPACE</div><h1>Group Booking Audit</h1></div>
-    <span class="version">V9 · EXCEL BREAKDOWN</span>
+    <span class="version">V11 · AUDIT WORKSPACE</span>
   </header>
   <main>
     <section class="intro">
@@ -93,6 +93,16 @@
       <p class="footnote">Enter the date of the night the rate applies to. For example, a stay from Thursday to Sunday has Thursday, Friday, and Saturday night rows. Thursday and Friday may use different rates. English contract rates and Folio comparisons are always USD. Hebrew contract rates and Folio comparisons are always ILS. No exchange rate or currency conversion is applied. If an older saved rate is marked in the other currency, re-enter its amount in the required currency or delete and recreate that row. The Group Report room type is taken from UPG, not RM. Master-account VAT (18%) is excluded from room-charge reconciliation.</p>
     </section>
 
+    <section class="panel v11-panel" aria-labelledby="v11Heading">
+      <div class="section-heading"><div><span class="number">4</span><h3 id="v11Heading">V11 · Room-night audit and corrections</h3></div><span class="hint">Local draft workspace</span></div>
+      <p class="muted">Review actual reported room-nights. Correct a posted nightly rate with a reason; changes are saved separately from the source. The existing Excel export remains unchanged and does not include V11 corrections.</p>
+      <p id="v11Summary" class="v11-summary">Import reports and select a group.</p>
+      <div class="table-wrap structured-table"><table><thead><tr><th>Night</th><th>Room</th><th>Guest</th><th>Type</th><th>Posted rate</th><th>Action</th></tr></thead><tbody id="v11Nights"></tbody></table></div>
+      <details><summary>Audit alerts</summary><pre id="v11Issues" class="v11-issues">No data yet</pre></details>
+      <div class="actions v11-actions"><button id="v11Undo" type="button" class="secondary">Undo last correction</button><button id="v11Backup" type="button" class="secondary">Download JSON backup</button><label class="secondary v11-restore-label">Restore backup<input id="v11Restore" type="file" accept="application/json,.json"></label></div>
+      <p id="v11Status" class="footnote" role="status">Local workspace will autosave after changes.</p>
+    </section>
+    <dialog id="v11CorrectionDialog" class="v11-dialog"><form id="v11CorrectionForm"><h3>Correct nightly rate</h3><input id="v11NightId" type="hidden"><label>Corrected posted rate<input id="v11Rate" type="number" min="0" step="0.01" required></label><label>Reason for correction<textarea id="v11Reason" required rows="3"></textarea></label><div class="actions"><button class="primary" type="submit">Save correction</button><button class="secondary" type="button" onclick="this.closest('dialog').close()">Cancel</button></div></form></dialog>
     <section class="panel export-panel">
       <div class="section-heading"><div><span class="number">5</span><h3>Generate Excel breakdown</h3></div><span class="hint">Uses the original hotel templates</span></div>
       <p class="muted">Create a breakdown for the selected group. Room charges are grouped by stay night, room type and occupancy. Existing Free/Staff and incidental sections are retained without adding unconfirmed calculations.</p>
@@ -109,5 +119,6 @@
   </main>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   <script type="module" src="app.js"></script>
+  <script type="module" src="src/v11Workspace.js"></script>
 </body>
 </html>
