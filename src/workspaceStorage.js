@@ -1,0 +1,8 @@
+const DB="hotel-v11-workspaces",STORE="snapshots",KEY="current";
+function database(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB,1);req.onupgradeneeded=()=>req.result.createObjectStore(STORE);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+async function transaction(mode,callback){const db=await database();try{return await new Promise((resolve,reject)=>{const tx=db.transaction(STORE,mode),store=tx.objectStore(STORE);const req=callback(store);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);tx.onerror=()=>reject(tx.error);});}finally{db.close();}}
+export async function saveWorkspace(data){const payload={version:1,savedAt:new Date().toISOString(),data};await transaction("readwrite",store=>store.put(payload,KEY));return payload;}
+export async function loadWorkspace(){return (await transaction("readonly",store=>store.get(KEY)))??null;}
+export function validateBackup(payload){if(!payload || payload.version!==1 || !payload.data || !Array.isArray(payload.data.reports) || !Array.isArray(payload.data.folioRecords) || !Array.isArray(payload.data.corrections))throw Error("Unsupported or invalid V11 backup");return payload;}
+export function downloadBackup(payload){const blob=new Blob([JSON.stringify(validateBackup(payload),null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="hotel-v11-workspace.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+export async function importBackup(file){const text=await file.text();const payload=validateBackup(JSON.parse(text));await saveWorkspace(payload.data);return payload;}
