@@ -85,3 +85,4 @@
 /* V10: clearly flag legacy contract-rate amounts saved in a different currency. */
 .rate-currency { display: inline-block; font-weight: 600; white-space: nowrap; }
 .rate-currency.currency-warning { color: #a34b00; }
+\n/* V11 isolated audit panel */\n.v11-panel{border-color:#b8cce2}.v11-summary{font-size:12px;font-weight:700;color:#284a72}.v11-panel details{margin-top:14px;font-size:12px}.v11-issues{white-space:pre-wrap;font-size:11px;color:#6c4b27;max-height:160px;overflow:auto}.v11-actions{flex-wrap:wrap}.v11-restore-label{cursor:pointer}.v11-restore-label input{display:none}.v11-dialog{border:1px solid #d8e0eb;border-radius:12px;padding:22px;max-width:420px;width:calc(100% - 32px)}.v11-dialog::backdrop{background:#18283d80}.v11-dialog form,.v11-dialog label{display:flex;flex-direction:column;gap:10px}.v11-dialog input,.v11-dialog textarea{padding:9px;border:1px solid #d8e0eb;border-radius:7px}.v11-dialog h3{margin:0 0 8px}\n
