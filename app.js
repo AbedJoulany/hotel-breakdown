@@ -567,6 +567,7 @@ $("parseBtn").addEventListener("click",async()=>{
     }
     if(state.folioFile){setStatus("Reading Folio…");const f=await extractPdf(state.folioFile);state.folioText=f.text;state.folioRecords=parseFolioRecords(f.text);}
     renderGroups();renderPreview();
+    window.dispatchEvent(new CustomEvent("hotel-v11-sync",{detail:{reports:state.reports,folioRecords:state.folioRecords,rates:getNightRates()}}));
     const count=state.reports.reduce((n,r)=>n+r.groups.length,0);
     const roomCount=state.reports.reduce((n,r)=>n+(r.structuredRecords||[]).length,0);
     setStatus(`Extraction complete · ${state.reports.length} report(s), ${count} group detections, ${roomCount} parsed room records${state.folioFile?`, ${state.folioRecords.length} Folio room-charge lines parsed`:""}`);
@@ -582,9 +583,9 @@ rateBody.addEventListener("input",(event)=>{
     row.dataset.savedCurrency = getContractCurrency();
     updateRateCurrencyLabel(row);
   }
-  saveActiveGroupRates();if(state.activeTab==="reconciliation")renderPreview();updateExportButton();
+  saveActiveGroupRates();window.dispatchEvent(new CustomEvent("hotel-v11-sync",{detail:{rates:getNightRates()}}));if(state.activeTab==="reconciliation")renderPreview();updateExportButton();
 });
-rateBody.addEventListener("change",()=>{saveActiveGroupRates();if(state.activeTab==="reconciliation")renderPreview();updateExportButton();});
+rateBody.addEventListener("change",()=>{window.dispatchEvent(new CustomEvent("hotel-v11-sync",{detail:{rates:getNightRates()}}));saveActiveGroupRates();if(state.activeTab==="reconciliation")renderPreview();updateExportButton();});
 function updateRateCurrencyLabel(row) {
   const required = getContractCurrency();
   const saved = row.dataset.savedCurrency || required;
